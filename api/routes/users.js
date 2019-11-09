@@ -13,6 +13,7 @@ const app = express();
 
 // load  input validation
 const validateRegisterInput = require("../validation/register");
+const validateLoginInput = require("../validation/login");
 
 router.post("/register", (req, res) => {
   const { email, password, name } = req.body;
@@ -58,10 +59,18 @@ router.post("/register", (req, res) => {
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  // check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   // find email exist
   User.findOne({ email }).then(user => {
     if (!user) {
-      return res.json({ email: "email not found" });
+      errors.email = "User not found";
+      return res.json(errors);
     }
 
     // compare password , hash password
@@ -80,7 +89,8 @@ router.post("/login", (req, res) => {
           return res.json({ token: "Bearer " + token });
         });
       } else {
-        return res.json({ password: "password incorrect" });
+        errors.password = "password is required";
+        return res.json(errors);
       }
     });
   });
