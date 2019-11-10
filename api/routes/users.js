@@ -85,9 +85,14 @@ router.post("/login", (req, res) => {
         };
 
         // sign token
-        jwt.sign(payload, keys.secret, { expiresIn: 3600 }, (err, token) => {
-          return res.json({ token: "Bearer " + token });
-        });
+        jwt.sign(
+          payload,
+          keys.secret,
+          { expiresIn: 36000000 },
+          (err, token) => {
+            return res.json({ token: "Bearer " + token });
+          }
+        );
       } else {
         errors.password = "password is required";
         return res.json(errors);
