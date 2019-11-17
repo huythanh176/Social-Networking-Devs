@@ -70,7 +70,7 @@ router.post("/login", (req, res) => {
   User.findOne({ email }).then(user => {
     if (!user) {
       errors.email = "User not found";
-      return res.json(errors);
+      return res.status(400).json(errors);
     }
 
     // compare password , hash password
@@ -85,17 +85,12 @@ router.post("/login", (req, res) => {
         };
 
         // sign token
-        jwt.sign(
-          payload,
-          keys.secret,
-          { expiresIn: 36000000 },
-          (err, token) => {
-            return res.json({ token: "Bearer " + token });
-          }
-        );
+        jwt.sign(payload, keys.secret, { expiresIn: 3600 }, (err, token) => {
+          return res.json({ token: "Bearer " + token });
+        });
       } else {
-        errors.password = "password is required";
-        return res.json(errors);
+        errors.password = "password is not match";
+        return res.status(400).json(errors);
       }
     });
   });

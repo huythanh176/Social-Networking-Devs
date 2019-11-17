@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { loginUser } from "../../reducers/authReducer";
+import TextField from "../common/TextField";
 
 class Login extends Component {
   constructor() {
@@ -57,22 +58,14 @@ class Login extends Component {
                 Sign in to your DevConnector account
               </p>
               <form onSubmit={this.onSubmit}>
-                <div className="form-group">
-                  <input
-                    type="email"
-                    className={`${
-                      errors.email ? "is-invalid" : ""
-                    } form-control form-control-lg`}
-                    placeholder="Email Address"
-                    name="email"
-                    autoComplete="true"
-                    value={this.email}
-                    onChange={this.onChange}
-                  />
-                  {errors.email && (
-                    <div className="invalid-feedback">{errors.email}</div>
-                  )}
-                </div>
+                <TextField
+                  type="email"
+                  error={errors.email}
+                  placeholder="Email Address"
+                  name="email"
+                  value={this.email}
+                  onChange={this.onChange}
+                ></TextField>
                 <div className="form-group">
                   <input
                     type="password"

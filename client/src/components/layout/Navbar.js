@@ -2,11 +2,14 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logoutUser } from "../../reducers/authReducer";
+import { CLEAR_CURRENT_PROFILE } from "../../reducers/profileReducer";
+import store from "../../store";
 
 class Navbar extends Component {
   onLogout = event => {
     event.preventDefault();
     this.props.logoutUser();
+    store.dispatch({ type: CLEAR_CURRENT_PROFILE });
   };
 
   render() {
