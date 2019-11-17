@@ -1,8 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { logoutUser } from "../../reducers/authReducer";
 
 class Navbar extends Component {
+  onLogout = event => {
+    event.preventDefault();
+    this.props.logoutUser();
+  };
+
   render() {
+    const { isAuthenticated, user } = this.props.auth;
     return (
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
         <div className="container">
@@ -27,23 +35,48 @@ class Navbar extends Component {
                 </Link>
               </li>
             </ul>
-
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to="/register">
-                  Sign Up
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">
-                  Login
-                </Link>
-              </li>
-            </ul>
+            {isAuthenticated === false ? (
+              <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <Link className="nav-link" to="/register">
+                    Sign Up
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login">
+                    Login
+                  </Link>
+                </li>
+              </ul>
+            ) : (
+              <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <a
+                    className="nav-link"
+                    onClick={this.onLogout.bind(this)}
+                    href=""
+                  >
+                    <img
+                      className="rounded-circle"
+                      style={{ width: "25px", marginRight: "10px" }}
+                      src={user.avatar}
+                      alt={user.name}
+                      title="Must have Gravatar"
+                    />
+                    Log out
+                  </a>
+                </li>
+              </ul>
+            )}
           </div>
         </div>
       </nav>
     );
   }
 }
-export default Navbar;
+export default connect(
+  state => ({
+    auth: state.auth
+  }),
+  { logoutUser }
+)(Navbar);

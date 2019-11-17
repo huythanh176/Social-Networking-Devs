@@ -1,16 +1,34 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { connect } from "react-redux";
+import { loginUser } from "../../reducers/authReducer";
 
 class Login extends Component {
   constructor() {
     super();
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      errors: {}
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
   }
 
   onChange = event => {
@@ -19,13 +37,16 @@ class Login extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-    const login = {
+    const account = {
       email: this.state.email,
       password: this.state.password
     };
+
+    this.props.loginUser(account);
   };
 
   render() {
+    const { errors } = this.state;
     return (
       <div className="login">
         <div className="container">
@@ -39,24 +60,34 @@ class Login extends Component {
                 <div className="form-group">
                   <input
                     type="email"
-                    className="form-control form-control-lg"
+                    className={`${
+                      errors.email ? "is-invalid" : ""
+                    } form-control form-control-lg`}
                     placeholder="Email Address"
                     name="email"
                     autoComplete="true"
                     value={this.email}
                     onChange={this.onChange}
                   />
+                  {errors.email && (
+                    <div className="invalid-feedback">{errors.email}</div>
+                  )}
                 </div>
                 <div className="form-group">
                   <input
                     type="password"
-                    className="form-control form-control-lg"
+                    className={`${
+                      errors.password ? "is-invalid" : ""
+                    } form-control form-control-lg`}
                     placeholder="Password"
                     name="password"
                     autoComplete="true"
                     value={this.password}
                     onChange={this.onChange}
                   />
+                  {errors.password && (
+                    <div className="invalid-feedback">{errors.password}</div>
+                  )}
                 </div>
                 <input type="submit" className="btn btn-info btn-block mt-4" />
               </form>
@@ -68,4 +99,10 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default connect(
+  state => ({
+    auth: state.auth,
+    errors: state.errors
+  }),
+  { loginUser }
+)(Login);
