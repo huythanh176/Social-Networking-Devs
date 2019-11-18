@@ -1,5 +1,6 @@
 import axios from "axios";
 import { GET_ERRORS } from "./errorsReducer";
+import { SET_CURRENT_USER } from "./authReducer";
 export const GET_PROFILE = "GET_PROFILE";
 export const PROFILE_LOADING = "PROFILE_LOADING";
 export const PROFILE_NOT_FOUND = "PROFILE_NOT_FOUND";
@@ -22,6 +23,63 @@ export const createProfile = (profileData, history) => dispatch => {
     .post("/api/profiles", profileData)
     .then(res => history.push("/dashboard"))
     .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+};
+
+export const deleteAccount = () => dispatch => {
+  axios
+    .delete("/api/profiles")
+    .then(() => dispatch({ type: SET_CURRENT_USER, payload: {} }))
+    .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+};
+
+export const addEducation = (expData, history) => dispatch => {
+  axios
+    .post("/api/profiles/education", expData)
+    .then(res => history.push("/dashboard"))
+    .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+};
+
+export const addExperience = (eduData, history) => dispatch => {
+  axios
+    .post("/api/profiles/experience", eduData)
+    .then(res => history.push("/dashboard"))
+    .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+};
+
+// Delete Experience
+export const deleteExperience = id => dispatch => {
+  axios
+    .delete(`/api/profiles/experience/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_PROFILE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Delete Education
+export const deleteEducation = id => dispatch => {
+  axios
+    .delete(`/api/profiles/education/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_PROFILE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
 };
 
 const initialState = {

@@ -240,9 +240,9 @@ router.delete("/education/:education_id", passportAuthenticate, (req, res) => {
 
 // delete profile and user
 router.delete("/", passportAuthenticate, (req, res) => {
-  Profile.findByIdAndRemove({ id: req.user.id })
+  Profile.findOneAndRemove({ id: req.user.id })
     .then(() => {
-      User.findByIdAndRemove({ _id: req.user.id }).then(() =>
+      User.findOneAndRemove({ _id: req.user.id }).then(() =>
         res.json({ success: true })
       );
     })
