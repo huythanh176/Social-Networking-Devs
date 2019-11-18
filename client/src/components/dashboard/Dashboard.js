@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import {
-  getCurrentProfile,
-  deleteAccount
-} from "../../reducers/profileReducer";
+import { getCurrentProfile } from "../../reducers/profileReducer";
 import Spiner from "../common/Spinner";
 import Experience from "./Experience";
 import Education from "./Education";
@@ -14,9 +11,6 @@ class Dashboard extends Component {
   componentDidMount() {
     this.props.getCurrentProfile();
   }
-  onDeleteClick = event => {
-    this.props.deleteAccount();
-  };
 
   render() {
     const { user } = this.props.auth;
@@ -61,12 +55,6 @@ class Dashboard extends Component {
                     <Experience experience={profile.experience} />
                     <Education education={profile.education} />
                     <div style={{ marginBottom: "60px" }} />
-                    <button
-                      onClick={this.onDeleteClick.bind(this)}
-                      className="btn btn-danger"
-                    >
-                      Delete My Account
-                    </button>
                   </div>
                 </div>
               </div>
@@ -82,5 +70,5 @@ export default connect(
     profile: state.profile,
     auth: state.auth
   }),
-  { getCurrentProfile, deleteAccount }
+  { getCurrentProfile }
 )(Dashboard);
