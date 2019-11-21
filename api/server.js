@@ -32,7 +32,7 @@ app.use("/api/users", users);
 app.use("/api/profiles", profiles);
 app.use("/api/posts", posts);
 
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join("client/build")));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));
