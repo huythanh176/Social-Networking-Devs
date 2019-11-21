@@ -17,7 +17,6 @@ class Dashboard extends Component {
     const { profile, loading } = this.props.profile;
     if (profile === null || loading) return <Spiner></Spiner>;
     else {
-      console.log(Object.keys(profile).length);
       if (Object.keys(profile).length <= 0)
         return (
           <div className="dashboard">

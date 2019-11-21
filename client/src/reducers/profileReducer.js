@@ -25,6 +25,25 @@ export const createProfile = (profileData, history) => dispatch => {
     .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
 };
 
+// get all profile
+export const getProfiles = () => dispatch => {
+  dispatch({ type: PROFILE_LOADING });
+  axios
+    .get("/api/profiles/all")
+    .then(res =>
+      dispatch({
+        type: GET_PROFILES,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_PROFILES,
+        payload: null
+      })
+    );
+};
+
 export const deleteAccount = () => dispatch => {
   axios
     .delete("/api/profiles")
@@ -97,6 +116,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         profile: action.payload,
+        loading: false
+      };
+    case GET_PROFILES:
+      return {
+        ...state,
+        profiles: action.payload,
         loading: false
       };
     case PROFILE_LOADING:
